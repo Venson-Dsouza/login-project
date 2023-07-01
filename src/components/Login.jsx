@@ -12,24 +12,12 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [passwordlength, setPasswordLength] = useState(false);
   const { loginUser } = useContext(AuthContext);
   const navigate = useNavigate();
-
-  // password character check
-  const validatePassword = (value) => {
-    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
-    return passwordRegex.test(value);
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // password character check
-    if (!validatePassword(password)) {
-      setPasswordLength(true);
-      return;
-    }
     const user = loginUser(email, password);
     if (user) {
       setEmail("");
@@ -48,36 +36,9 @@ const Login = () => {
 
   return (
     <div>
-      {passwordlength && (
-        <div
-          class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-          role="alert"
-        >
-          <span class="block sm:inline">
-            Password must contain at least 8 characters, one uppercase letter,
-            one lowercase letter, and one number.
-          </span>
-          <span
-            class="absolute top-0 bottom-0 right-0 px-4 py-3"
-            onClick={() => {
-              setPasswordLength(false);
-            }}
-          >
-            <svg
-              class="fill-current h-6 w-6 text-red-500"
-              role="button"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-            >
-              <title>Close</title>
-              <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
-            </svg>
-          </span>
-        </div>
-      )}
       <div className="bg-gradient-to-r from-violet-500 to-fuchsia-500 flex flex-row items-center justify-around">
         <div className="w-64 hidden sm:block animate-trans-down">
-          <img src={login2} alt="" className="relative" />
+          <img src={login2} alt="" className="relative pointer-events-none" />
         </div>
         <div className="min-h-screen p-5 flex flex-col items-center justify-center">
           <div

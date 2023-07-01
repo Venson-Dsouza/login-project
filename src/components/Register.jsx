@@ -22,22 +22,11 @@ const Register = () => {
   const { registerUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  // password character check
-  const validatePassword = (value) => {
-    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
-    return passwordRegex.test(value);
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     // Match password check
     if (password !== confirmPassword) {
       setPasswordMatch(false);
-      return;
-    }
-    // password character check
-    if (!validatePassword(password)) {
-      setPasswordLength(true);
       return;
     }
     registerUser({ name, email, password });
@@ -47,6 +36,11 @@ const Register = () => {
     setConfirmPassword("");
     setPasswordMatch(true);
     setlogin(true);
+  };
+
+  const handlePasswordChange = (value) => {
+    setPassword(value);
+    setPasswordLength(true);
   };
 
   // Match password check
@@ -66,33 +60,6 @@ const Register = () => {
 
   return (
     <div>
-      {passwordlength && (
-        <div
-          class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-          role="alert"
-        >
-          <span class="block sm:inline">
-            Password must contain at least 8 characters, one uppercase letter,
-            one lowercase letter, and one number.
-          </span>
-          <span
-            class="absolute top-0 bottom-0 right-0 px-4 py-3"
-            onClick={() => {
-              setPasswordLength(false);
-            }}
-          >
-            <svg
-              class="fill-current h-6 w-6 text-red-500"
-              role="button"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-            >
-              <title>Close</title>
-              <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
-            </svg>
-          </span>
-        </div>
-      )}
       {login ? (
         <div className="min-h-screen p-5 flex flex-col items-center justify-center bg-gradient-to-r from-violet-500 to-fuchsia-500">
           <div class="fixed left-0 top-0 flex h-full w-full items-center justify-center bg-black bg-opacity-50 py-10 p-2">
@@ -122,7 +89,11 @@ const Register = () => {
       ) : (
         <div className="bg-gradient-to-r from-violet-500 to-fuchsia-500 flex flex-row items-center justify-around">
           <div className="w-96 hidden lg:block animate-trans-down">
-            <img src={register1} alt="" className="relative" />
+            <img
+              src={register1}
+              alt=""
+              className="relative pointer-events-none"
+            />
           </div>
           <div className="min-h-screen p-5 flex flex-col items-center justify-center">
             <div
@@ -208,7 +179,7 @@ const Register = () => {
                     text-gray-400
                   "
                       >
-                        <img src={emailIcon} alt="" className="w-6" />
+                        <img src={emailIcon} alt="" className="w-5" />
                       </div>
 
                       <input
@@ -252,13 +223,13 @@ const Register = () => {
                   "
                       >
                         <span>
-                          <img src={passwordIcon} alt="" className="w-6" />
+                          <img src={passwordIcon} alt="" className="w-5" />
                         </span>
                       </div>
                       <input
                         type={showPassword ? "text" : "password"}
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        onChange={(e) => handlePasswordChange(e.target.value)}
                         required
                         id="password"
                         name="password"
@@ -298,6 +269,31 @@ const Register = () => {
                         </span>
                       </div>
                     </div>
+                    {passwordlength && (
+                      <p className="mb-1 text-xs sm:text-sm tracking-wide mt-1 text-red-600">
+                        {/* Password must contain at least */}
+                        {password.length < 8 && (
+                          <>
+                            <p>Must have at least 8 characters </p>
+                          </>
+                        )}
+                        {!/[A-Z]/.test(password) && (
+                          <>
+                            <p>Add at least one uppercase letter</p>
+                          </>
+                        )}
+                        {!/[a-z]/.test(password) && (
+                          <>
+                            <p>Add at least one lowercase letter</p>
+                          </>
+                        )}
+                        {!/\d/.test(password) && (
+                          <>
+                            <p>Add at least one number</p>
+                          </>
+                        )}
+                      </p>
+                    )}
                   </div>
                   <div className="flex flex-col mb-6">
                     <label className="mb-1 text-xs sm:text-sm tracking-wide text-gray-600">
@@ -318,7 +314,7 @@ const Register = () => {
                   "
                       >
                         <span>
-                          <img src={passwordIcon} alt="" className="w-6" />
+                          <img src={passwordIcon} alt="" className="w-5" />
                         </span>
                       </div>
                       <input
@@ -393,7 +389,11 @@ const Register = () => {
             </div>
           </div>
           <div className="w-96 hidden sm:block animate-trans-down">
-            <img src={register2} alt="" className="relative" />
+            <img
+              src={register2}
+              alt=""
+              className="relative pointer-events-none"
+            />
           </div>
         </div>
       )}
